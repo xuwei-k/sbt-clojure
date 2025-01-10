@@ -8,7 +8,7 @@ object ClojurePlugin extends AutoPlugin {
 
   private object ClojureDefaults extends Keys {
     val settings = Seq(
-      clojureVersion := "1.11.1",
+      clojureVersion := "1.12.0",
       libraryDependencies ++= Seq[ModuleID](
         "org.clojure" % "clojure" % clojureVersion.value % Config.name
       )
@@ -23,10 +23,10 @@ object ClojurePlugin extends AutoPlugin {
         val s: TaskStreams = streams.value
         val sourceDirectory : File = (Compile/clojureSource ).value
         val nb = (sourceDirectory ** "*.clj").get.size
+        val u = update.value
         if(nb > 0){
-          val s: TaskStreams = streams.value
           s.log.info("Start Compiling Clojure sources")
-          val classpath : Seq[File] = update.value.select( configurationFilter(name = "*") ) ++ Seq((Compile/classDirectory ).value)
+          val classpath : Seq[File] = u.select( configurationFilter(name = "*") ) ++ Seq((Compile/classDirectory ).value)
           val stubDirectory : File = (Compile/sourceManaged ).value
           val destinationDirectory : File = (Compile/classDirectory ).value
 
@@ -56,9 +56,10 @@ object ClojurePlugin extends AutoPlugin {
         val sourceDirectory : File = (Test/clojureSource ).value
         val nb = (sourceDirectory ** "*.clj").get.size
         val s: TaskStreams = streams.value
+        val u = update.value
         if(nb > 0){
           s.log.info("Start Compiling Test Clojure sources")
-          val classpath : Seq[File] = update.value.select( configurationFilter(name = "*") ) ++ Seq((Test/classDirectory ).value) ++ Seq((Compile/classDirectory ).value)
+          val classpath : Seq[File] = u.select( configurationFilter(name = "*") ) ++ Seq((Test/classDirectory ).value) ++ Seq((Compile/classDirectory ).value)
           val stubDirectory : File = (Test/sourceManaged ).value
           val destinationDirectory : File = (Test/classDirectory ).value
 
